@@ -12,6 +12,7 @@ function NavbarUser() {
     const navigate = useNavigate();
  // يطبع اسم المستخدم الحالي لو موجود
     const [currentUser, setCurrentUser] = useState(null);
+    const [isOpen, setIsOpen] = useState(false);
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem("currentUser"));
@@ -22,41 +23,51 @@ function NavbarUser() {
         navigate("/");
     }
 
+    const linkClass = "px-4 py-2 rounded-2xl  rounded-2xl cursor-pointer text-pink-600 hover:text-amber-400 border-2 border-amber-400 bg-amber-400 hover:bg-transparent border-2 border-[var(--color-prinky)] hover:bg-transparent  transition ease-in-out duration-300";
+    const linkClass1 = "px-4 py-2 rounded-2xl rounded-2xl cursor-pointer text-white hover:text-[var(--color-prinky)] border-2 border-[var(--color-prinky)] hover:bg-transparent bg-[var(--color-prinky)] transition ease-in-out duration-300";
     return (
         <>
-            <header className=" w-full h-fit bg-pink-10 *:shadow-lg shadow-pink-500 flex items-center justify-center">
-                <nav className=" w-full h-fit  flex items-center justify-center gap-6 md:justify-evenly md:gap-10 lg:justify-around xl:justify-between  min-w-full px-4 py-3 flex-wrap">
-                    <div className="logo w-fit h-fit px-2.5 flex justify-center items-center hover:text-white gap-3 py-1.5 bg-[var(--color-prinky)] rounded-3xl shadow-sm mr-6 hover:bg-pink-800 cursor-pointer transition-all duration-300 ease-in-out hover:scale-3d">
-                        <img src={logo} alt="" width={40} height={45} className=" rounded-tl-2xl rounded-br-2xl" />
-                        <p className=" text-var[(--color-prinky)] text-2xl">Welcome {currentUser ? currentUser.firstName : ""}</p>
-                    </div>
-                    <div className="btns w-fit gap-4 mr-6 h-fit flex items-center justify-center">
-                        <button
-                            onClick={handleLogOut}
-                            className=" bg-[var(--color-creamy)] w-fit h-[45px] text-[var(--color-prinky)] rounded-2xl w-fit px-6 py-2 rounded transition duration-300 ease-in-out border-2 border-[var(--color-creamy)] cursor-pointer hover:bg-transparent flex items-center justify-center hover:text-amber-400">
-                            <span>Log Out</span>
+            <nav className=" w-full h-fit  shadow-pink-200 bg-pink-10 flex items-center justify-between gap-6 md:justify-evenly md:gap-10 lg:justify-around xl:justify-between  min-w-full px-4 py-3 flex-wrap">
+                <div className="logo w-fit h-fit px-2.5 flex justify-center items-center hover:text-white gap-3 py-1.5 bg-[var(--color-prinky)] rounded-3xl shadow-sm mr-6 hover:bg-pink-800 cursor-pointer transition-all duration-300 ease-in-out hover:scale-3d">
+                    <img src={logo} alt="" width={40} height={45} className=" rounded-tl-2xl rounded-br-2xl" />
+                    <p className=" text-var[(--color-prinky)] text-2xl">hello {currentUser ? currentUser.firstName : ""}</p>
+                </div>
+                {/* Right side (desktop) */}
+                <div className="hidden md:flex space-x-6">
+                    <NavLink to="/product" className={({ isActive }) => `${linkClass1} ${isActive ? "bg-pink-600 border-pink-500 text-white" : ""}`}>
+                        Products
+                    </NavLink>
+                    <NavLink to="/wish" className={({ isActive }) => `${linkClass1} ${isActive ? "bg-pink-600 border-pink-500 text-white" : ""}`}>
+                        Wishlist
+                    </NavLink>
+                    <button onClick={handleLogOut} className={linkClass}>
+                        Logout
+                    </button>
+                </div>
+
+                {/* Mobile menu button */}
+                <div className="md:hidden">
+                    <button onClick={() => setIsOpen(!isOpen)} className="focus:outline-none">
+                        {isOpen ? "✖" : "☰"}
+                    </button>
+                </div>
+
+                {/* Mobile dropdown */}
+                {isOpen && (
+                    <div className="md:hidden bg-pink-700 px-4 pt-2 pb-3 space-y-2">
+                        <p className="block text-lg">hello {currentUser ? currentUser.firstName : ""}</p>
+                        <NavLink to="/product" className={({ isActive }) => `${linkClass1} block w-full text-left ${isActive ? "bg-pink-800" : ""}`}>
+                            Products
+                        </NavLink>
+                        <NavLink to="/wish" className={({ isActive }) => `${linkClass1} block w-full text-left ${isActive ? "bg-pink-800" : ""}`}>
+                            Wishlist
+                        </NavLink>
+                        <button onClick={handleLogOut} className={linkClass + "block w-full text-left px-3 py-2  hover:bg-pink-800"}>
+                            Logout
                         </button>
-                        <NavLink
-                            to={"/wish"}
-                            
-                            className={
-                                " hover:text-pink-400 bg-[var(--color-prinky)] focus:text-pink-600 focus:bg-transparent focus:border-pink-600 rounded-2xl text-white hover:bg-transparent border-2 border-pink-400 px-6 py-2 rounded transition-all duration-300 ease-in-out"
-                            }>
-                            {" "}
-                            WishList
-                        </NavLink>
-                        <NavLink
-                            to={"/product"}
-                          
-                            className={
-                                " hover:text-pink-400 bg-[var(--color-prinky)] focus:text-pink-600 focus:bg-transparent focus:border-pink-600 rounded-2xl text-white hover:bg-transparent border-2 border-pink-400 px-6 py-2 rounded transition-all duration-300 ease-in-out"
-                            }>
-                            {" "}
-                           Product
-                        </NavLink>
                     </div>
-                </nav>
-            </header>
+                )}
+            </nav>
         </>
     );
 }
